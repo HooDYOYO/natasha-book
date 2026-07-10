@@ -63,43 +63,21 @@ function showMissingFile() {
 currentImage.addEventListener("error", showMissingFile);
 
 function openBook() {
-  if (startScreen.classList.contains("is-opening")) return;
+  startScreen.classList.add("is-hidden");
+  reader.classList.add("is-visible");
+  reader.setAttribute("aria-hidden", "false");
+  book.classList.remove("opening");
+  void book.offsetWidth;
+  book.classList.add("opening");
+  render();
 
-  openButton.disabled = true;
-  startScreen.classList.add("is-opening");
-
-  // Пока обложка приближается, подготавливаем первые страницы.
-  Promise.all(
-    pages.slice(0, 3).map((src) => new Promise((resolve) => {
-      const image = new Image();
-      image.onload = image.onerror = resolve;
-      image.src = src;
-    }))
-  ).finally(() => loadingScreen.classList.add("is-hidden"));
-
-  window.setTimeout(() => {
-    render();
-    reader.classList.add("is-visible");
-    reader.setAttribute("aria-hidden", "false");
-
-    book.classList.remove("opening");
-    void book.offsetWidth;
-    book.classList.add("opening");
-
-    startScreen.classList.add("is-hidden");
-
-    window.setTimeout(() => {
-      startScreen.classList.remove("is-opening");
-      openButton.disabled = false;
-    }, 800);
-  }, 820);
+Promise.all(pages.slice(0, 3).map((src) => new Promise((resolve) => { const i = new Image(); i.onload = i.onerror = resolve; i.src = src; }))).finally(() => loadingScreen.classList.add("is-hidden"));
 }
 
 function goHome() {
   reader.classList.remove("is-visible");
   reader.setAttribute("aria-hidden", "true");
-  startScreen.classList.remove("is-hidden", "is-opening");
-  openButton.disabled = false;
+  startScreen.classList.remove("is-hidden");
   endScreen.classList.remove("is-visible");
 }
 
