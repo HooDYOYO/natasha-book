@@ -45,14 +45,6 @@ function preloadAround() {
 
 function render() {
   currentImage.src = pages[index];
-  currentSpread.classList.remove("page-enter", "first-visit-enter");
-  void currentSpread.offsetWidth;
-  if (!visitedPages.has(index)) {
-    currentSpread.classList.add("first-visit-enter");
-    visitedPages.add(index);
-  } else {
-    currentSpread.classList.add("page-enter");
-  }
   currentImage.alt = `Разворот ${index + 1} из ${pages.length}`;
   counter.textContent = `${index + 1} / ${pages.length}`;
   progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
@@ -71,21 +63,43 @@ function showMissingFile() {
 currentImage.addEventListener("error", showMissingFile);
 
 function openBook() {
-  startScreen.classList.add("is-hidden");
-  reader.classList.add("is-visible");
-  reader.setAttribute("aria-hidden", "false");
-  book.classList.remove("opening");
-  void book.offsetWidth;
-  book.classList.add("opening");
-  render();
+  if (startScreen.classList.contains("is-opening")) return;
 
-Promise.all(pages.slice(0, 3).map((src) => new Promise((resolve) => { const i = new Image(); i.onload = i.onerror = resolve; i.src = src; }))).finally(() => loadingScreen.classList.add("is-hidden"));
+  openButton.disabled = true;
+  startScreen.classList.add("is-opening");
+
+  // Пока обложка приближается, подготавливаем первые страницы.
+  Promise.all(
+    pages.slice(0, 3).map((src) => new Promise((resolve) => {
+      const image = new Image();
+      image.onload = image.onerror = resolve;
+      image.src = src;
+    }))
+  ).finally(() => loadingScreen.classList.add("is-hidden"));
+
+  window.setTimeout(() => {
+    render();
+    reader.classList.add("is-visible");
+    reader.setAttribute("aria-hidden", "false");
+
+    book.classList.remove("opening");
+    void book.offsetWidth;
+    book.classList.add("opening");
+
+    startScreen.classList.add("is-hidden");
+
+    window.setTimeout(() => {
+      startScreen.classList.remove("is-opening");
+      openButton.disabled = false;
+    }, 800);
+  }, 820);
 }
 
 function goHome() {
   reader.classList.remove("is-visible");
   reader.setAttribute("aria-hidden", "true");
-  startScreen.classList.remove("is-hidden");
+  startScreen.classList.remove("is-hidden", "is-opening");
+  openButton.disabled = false;
   endScreen.classList.remove("is-visible");
 }
 
@@ -105,7 +119,6 @@ function turn(direction) {
   window.setTimeout(() => {
     index = target;
     book.classList.remove("turn-next", "turn-prev");
-    render();
     isTurning = false;
     render();
   }, config.turnDuration);
