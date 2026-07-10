@@ -45,6 +45,14 @@ function preloadAround() {
 
 function render() {
   currentImage.src = pages[index];
+  currentSpread.classList.remove("page-enter", "first-visit-enter");
+  void currentSpread.offsetWidth;
+  if (!visitedPages.has(index)) {
+    currentSpread.classList.add("first-visit-enter");
+    visitedPages.add(index);
+  } else {
+    currentSpread.classList.add("page-enter");
+  }
   currentImage.alt = `Разворот ${index + 1} из ${pages.length}`;
   counter.textContent = `${index + 1} / ${pages.length}`;
   progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
@@ -97,6 +105,7 @@ function turn(direction) {
   window.setTimeout(() => {
     index = target;
     book.classList.remove("turn-next", "turn-prev");
+    render();
     isTurning = false;
     render();
   }, config.turnDuration);
