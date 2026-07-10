@@ -35,6 +35,7 @@ const restartButton = $("restartButton");
 let index = 0;
 let isTurning = false;
 let touchStartX = 0;
+const visitedPages = new Set();
 
 function preloadAround() {
   [index - 1, index + 1, index + 2]
@@ -44,9 +45,6 @@ function preloadAround() {
 
 function render() {
   currentImage.src = pages[index];
-  currentSpread.classList.remove("page-enter");
-  void currentSpread.offsetWidth;
-  currentSpread.classList.add("page-enter");
   currentImage.alt = `Разворот ${index + 1} из ${pages.length}`;
   counter.textContent = `${index + 1} / ${pages.length}`;
   progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
@@ -99,7 +97,6 @@ function turn(direction) {
   window.setTimeout(() => {
     index = target;
     book.classList.remove("turn-next", "turn-prev");
-    render();
     isTurning = false;
     render();
   }, config.turnDuration);

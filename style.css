@@ -191,8 +191,6 @@ button { font: inherit; }
 .loading-screen.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 .loader { width: 34px; height: 34px; margin: auto; border-radius: 50%; border: 2px solid rgba(255,255,255,.15); border-top-color: rgba(255,255,255,.8); animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.spread-current.page-enter { animation: spreadEnter .7s cubic-bezier(.2,.7,.2,1) both; }
-@keyframes spreadEnter { from { opacity: .15; transform: scale(.992); filter: brightness(.88); } to { opacity: 1; transform: scale(1); filter: brightness(1); } }
 .book.opening { animation: bookOpen 1.1s cubic-bezier(.2,.75,.2,1) both; transform-origin: 50% 50%; }
 @keyframes bookOpen { 0% { opacity: 0; transform: translateY(28px) scale(.9) rotateX(9deg); } 55% { opacity: 1; } 100% { opacity: 1; transform: none; } }
 .end-screen { position: fixed; inset: 0; z-index: 25; display: grid; place-items: center; padding: 24px; background: rgba(18,16,14,.82); backdrop-filter: blur(14px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .5s ease, visibility .5s; }
@@ -201,3 +199,46 @@ button { font: inherit; }
 .end-card p { margin: 0 0 22px; font-size: clamp(24px,4vw,42px); }
 .end-button { border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 12px 24px; color: white; background: rgba(255,255,255,.09); cursor: pointer; }
 .end-button:hover { background: rgba(255,255,255,.16); }
+
+
+
+/* Открытие обложки */
+.cover-scene {
+  will-change: transform, filter, opacity;
+  transition: transform .92s cubic-bezier(.2,.76,.18,1),
+              filter .92s ease,
+              opacity .72s ease;
+}
+.cover-image {
+  will-change: transform;
+  transition: transform .92s cubic-bezier(.2,.76,.18,1);
+}
+.cover-hotspot {
+  transition: opacity .22s ease, visibility .22s ease;
+}
+.start-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(230,194,125,.10), transparent 42%);
+  transition: opacity .65s ease;
+}
+.start-screen.is-opening::after { opacity: 1; }
+.start-screen.is-opening .cover-scene {
+  animation: none;
+  transform: translateY(-1.2%) scale(1.115);
+  filter: brightness(1.08) contrast(1.015);
+}
+.start-screen.is-opening .cover-image {
+  transform: scale(1.012);
+}
+.start-screen.is-opening .cover-hotspot {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.start-screen.is-opening {
+  cursor: wait;
+}
