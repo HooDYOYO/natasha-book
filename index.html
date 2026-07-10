@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#171513" />
+  <title>Твоя Беларусь</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="start-screen" id="startScreen">
+      <div class="cover-scene" id="coverCard">
+        <img class="cover-image" src="assets/cover.png" alt="Обложка книги «Твоя Беларусь. 2021–2025»" />
+        <button class="cover-hotspot" id="openButton" type="button" aria-label="Открыть книгу"></button>
+      </div>
+    </section>
+
+    <section class="reader" id="reader" aria-hidden="true">
+      <div class="topbar">
+        <button class="icon-button" id="homeButton" type="button" aria-label="Вернуться к обложке">⌂</button>
+        <div class="progress"><div id="progressBar"></div></div>
+        <button class="icon-button" id="fullscreenButton" type="button" aria-label="Полноэкранный режим">⛶</button>
+      </div>
+
+      <div class="book-stage" id="bookStage">
+        <div class="loading-screen" id="loadingScreen"><div class="loader"></div><span>Загружаем книгу…</span></div>
+        <div class="book" id="book">
+          <div class="spread spread-current" id="currentSpread">
+            <img id="currentImage" alt="Разворот книги" draggable="false" />
+          </div>
+          <div class="spread spread-incoming" id="incomingSpread">
+            <img id="incomingImage" alt="Следующий разворот книги" draggable="false" />
+          </div>
+          <div class="paper-sweep" aria-hidden="true"></div>
+          <div class="spine" aria-hidden="true"></div>
+        </div>
+        <button class="tap-zone tap-prev" id="tapPrev" aria-label="Предыдущий разворот"></button>
+        <button class="tap-zone tap-next" id="tapNext" aria-label="Следующий разворот"></button>
+      </div>
+
+      <div class="controls">
+        <button class="nav-button" id="prevButton" type="button" aria-label="Предыдущий разворот">←</button>
+        <span class="counter" id="counter">1 / 41</span>
+        <button class="nav-button" id="nextButton" type="button" aria-label="Следующий разворот">→</button>
+      </div>
+      <p class="hint">Листай стрелками клавиатуры или нажимай по краям книги</p>
+          <div class="end-screen" id="endScreen" aria-hidden="true">
+        <div class="end-card">
+          <p>Книга закончилась</p>
+          <button class="end-button" id="restartButton" type="button">Посмотреть сначала</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
